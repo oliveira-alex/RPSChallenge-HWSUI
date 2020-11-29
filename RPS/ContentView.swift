@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
-	let moves = ["Rock", "Paper", "Scissors"]
+	let moves = ["👊", "🖐", "✌️"]
 	
 	@State private var moveNumber = Int.random(in: 0 ..< 3)
 	@State private var shouldWin = Bool.random()
@@ -16,55 +16,91 @@ struct ContentView: View {
 	@State private var score = 0
 	
 	@State private var showingScoreAlert = false
+	@State private var alertTitle = ""
+	@State private var alertMsg = ""
 	
     var body: some View {
 		VStack(spacing: 30) {
-			Group {
+			Text("")
+			
+			VStack(spacing: 5) {
 				Text(moves[moveNumber])
 				
-				shouldWin ? Text("Win") : Text("Lose")
+				if shouldWin {
+					Text("Win")
+						.foregroundColor(.blue)
+				} else {
+					Text("Lose")
+						.foregroundColor(.red)
+				}
 			}
-			.font(.title)
+			.font(.largeTitle)
+			.frame(width: 300, height: 110)
+			.background(Color.gray.opacity(0.35))
+			.clipShape(RoundedRectangle(cornerRadius: 10))
 			
 			Spacer()
 			
-			ForEach(0 ..< 3) { number in
-				Button(action: {
-					self.moveTapped(number)
-				}) {
-					Text(moves[number])
-						.font(.largeTitle)
+			VStack(spacing: 10) {
+				ForEach(0 ..< 3) { number in
+					Button(action: {
+						self.moveTapped(number)
+					}) {
+						Text(moves[number])
+							.font(.largeTitle)
+							.frame(width: 300, height: 65)
+							.background(Color.gray.opacity(0.35))
+							.clipShape(RoundedRectangle(cornerRadius: 10))
+					}
 				}
 			}
 
 			Spacer()
 			
 			Text("Score: \(score)")
+				.font(.title2)
 		}
-//		.alert(isPresented: $showingScoreAlert) {
-//			Alert(title: Text("Title"), message: nil, dismissButton: .default(Text("Continue")))
-//		}
+		.alert(isPresented: $showingScoreAlert) {
+			Alert(title: Text(alertTitle), message: Text(alertMsg), dismissButton: .default(Text("Continue")) {
+					let previousMoveNumber = moveNumber
+					let previousShouldWin = shouldWin
+					
+					repeat {
+						moveNumber = Int.random(in: 0 ..< 3)
+						shouldWin = Bool.random()
+					} while (moveNumber == previousMoveNumber && shouldWin == previousShouldWin)
+			})
+		}
     }
 	
 	func moveTapped(_ number: Int) {
+		var correctAnswer = -1
+		
 		if shouldWin {
-			if number > moveNumber || (number == 0 && moveNumber == 2){
-				score += 1
-			} else {
-				score -= 1
+			if moveNumber < 2 {
+				correctAnswer = moveNumber + 1
+			} else if moveNumber == 2 {
+				correctAnswer = 0
 			}
-		} else {
-			if number < moveNumber || (number == 2 && moveNumber == 0){
-				score += 1
-			} else {
-				score -= 1
+		} else if !shouldWin {
+			if moveNumber > 0 {
+				correctAnswer = moveNumber - 1
+			} else if moveNumber == 0 {
+				correctAnswer = 2
 			}
 		}
 		
-//		showingScoreAlert = true
+		if number == correctAnswer {
+			score += 1
+			alertTitle = "Correct"
+			alertMsg = "Score: \(score)"
+		} else if number != correctAnswer {
+			score -= 1
+			alertTitle = "Wrong"
+			alertMsg = "You should had chosen \(moves[correctAnswer])"
+		}
 		
-		moveNumber = Int.random(in: 0 ..< 3)
-		shouldWin = Bool.random()
+		showingScoreAlert = true
 	}
 }
 
