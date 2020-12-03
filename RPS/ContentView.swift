@@ -97,7 +97,7 @@ struct ContentView: View {
 		} else if number != correctAnswer {
 			score -= 1
 			alertTitle = "Wrong"
-			alertMsg = "You should had chosen \(moves[correctAnswer])"
+			alertMsg = "You should have chosen \(moves[correctAnswer])"
 		}
 		
 		showingScoreAlert = true
