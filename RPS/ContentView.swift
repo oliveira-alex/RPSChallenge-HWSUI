@@ -45,8 +45,6 @@ struct ContentView: View {
                 Text("Choose your move")
                     .font(.title2)
                 
-                
-                
 				ForEach(0 ..< 3) { number in
 					Button(action: {
 						self.moveTapped(number)
