@@ -42,6 +42,11 @@ struct ContentView: View {
 			Spacer()
 			
 			VStack(spacing: 10) {
+                Text("Choose your move")
+                    .font(.title2)
+                
+                
+                
 				ForEach(0 ..< 3) { number in
 					Button(action: {
 						self.moveTapped(number)
