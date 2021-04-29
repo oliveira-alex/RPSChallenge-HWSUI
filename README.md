@@ -8,4 +8,4 @@ In oder to score a point you should either win or lose, as shown on screen, foll
 <br></br>
 
 # What I learned
-* Use alerts
+* How to use alerts
